@@ -6,6 +6,8 @@ isPushed = False
 turn_id = 0
 board = 0
 isGameFinished = False
+count = 0
+max_count = 0
 
 def initBoard(height_n, width_n):
     fill(245, 218, 129)
@@ -13,7 +15,9 @@ def initBoard(height_n, width_n):
     
     global board_width
     global board_height
+    global max_count
     
+    max_count = width_n * height_n
     board_width = width_n
     board_height = height_n
     
@@ -31,12 +35,15 @@ def initBoard(height_n, width_n):
 def player_turn(i, j, pid):
     global turn_id
     global isGameFinished
+    global count
+    global max_count
     pos_y = i
     pos_x = j
     
     if isCanPut(pos_y, pos_x):
         board[pos_y][pos_x] = pid
         draw_piece(pos_y, pos_x, pid)
+        count += 1
         turn_id = 1 - pid
         
         if turn_id == 0:
@@ -46,7 +53,7 @@ def player_turn(i, j, pid):
         print_text(s)
 
         judgement = Judge(board, pos_y, pos_x, pid)
-        if judgement == 0:
+        if count == max_count:
             print_text("Draw")
             isGameFinished = True
         elif judgement == 1:
@@ -213,7 +220,7 @@ def print_text(s):
     stroke(255)
     rect(0, 801, 800, 100)
 
-    if s == "FirstHand won" or s == "SecondHand won":
+    if s == "FirstHand won" or s == "SecondHand won" or s == "Draw":
         fill(255, 0, 0)
     else:
         fill(0)
