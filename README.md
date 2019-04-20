@@ -1,6 +1,6 @@
 # 制限付き四目並べ ( Restricted Yonmoku Game )
 
-![image](https://user-images.githubusercontent.com/7500984/56297883-26fd2f80-616c-11e9-83aa-1c50bf7f12c1.PNG)
+![image](https://user-images.githubusercontent.com/7500984/56457013-72535000-63af-11e9-81a1-fa87c84b4cd8.PNG)
 
 ## ルール
 ### 勝利条件
