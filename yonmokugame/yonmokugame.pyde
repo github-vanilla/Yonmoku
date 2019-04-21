@@ -1,3 +1,6 @@
+import time, socket, sys
+
+board_color = color(245, 218, 129)
 board_height = 0
 board_width = 0
 height_unit = 0
@@ -5,24 +8,26 @@ width_unit = 0
 isPushed = False
 turn_id = 0
 board = 0
-isGameFinished = False
+isGameEnabled = False
+isServer = True
 count = 0
 max_count = 0
 
 def initBoard(height_n, width_n):
-    fill(245, 218, 129)
+    fill(board_color)
     rect(0, 0, 800, 800)
     
     global board_width
     global board_height
+    global height_unit
+    global width_unit
+    
     global max_count
     
     max_count = width_n * height_n
     board_width = width_n
     board_height = height_n
     
-    global height_unit
-    global width_unit
     height_unit = 800 / height_n
     width_unit = 800 / width_n
     
@@ -34,38 +39,34 @@ def initBoard(height_n, width_n):
         
 def player_turn(i, j, pid):
     global turn_id
-    global isGameFinished
+    global isGameEnabled
     global count
     global max_count
-    pos_y = i
-    pos_x = j
     
-    if isCanPut(pos_y, pos_x):
-        board[pos_y][pos_x] = pid
-        draw_piece(pos_y, pos_x, pid)
+    if isCanPut(i, j):
+        board[i][j] = pid
+        draw_piece(i, j, pid)
         count += 1
         turn_id = 1 - pid
         
-        if turn_id == 0:
-            s = "FirstHand's turn"
-        elif turn_id == 1:
-            s = "SecondHand's turn"
-        print_text(s)
+        if turn_id == 0: s1 = "Black's turn"
+        elif turn_id == 1: s1 = "White's turn"
+        print_text(s1)
 
-        judgement = Judge(board, pos_y, pos_x, pid)
+        judgement = Judge(board, i, j, pid)
         if count == max_count:
             print_text("Draw")
-            isGameFinished = True
+            isGameEnabled = False
         elif judgement == 1:
             if pid == 0:
-                s = "FirstHand"
+                s1 = "Black"
             elif pid == 1:
-                s = "SecondHand"
+                s1 = "White"
 
-            print_text(s + " won")
-            isGameFinished = True
+            print_text(s1 + " won")
+            isGameEnabled = False
     else:
-        print_text("Cannot put a piece in that position")
+        print_text("Cannot put a piece on the position")
 
 def Judge(b, y, x, pid):
     base_x = x - 3
@@ -187,42 +188,57 @@ def draw_piece(i, j, pid):
 
 def draw_space(i, j):
     noStroke()
-    fill(245, 218, 129)
+    fill(board_color)
     rect(width_unit * j + 1, height_unit * i + 1, width_unit - 1, height_unit - 1)
     
 def clickScreen(y, x, pid):
     if 0 < x < 800 and 0 < y < 800:
         global height_unit
         global width_unit
+            
         i = y // height_unit
         j = x // width_unit
+        
         player_turn(i, j, pid)
-
-def setup():
-    size(800, 900)
-    background(255)
+        
+def startGame():
     initBoard(10, 10)
     global board
-    board = [[2 for i in range(board_height)] for j in range(board_width)]
-    print_text("FirstHand's turn")
-
-def draw():
-    global isPushed
-    global turn_id
-    if mousePressed and not isPushed and not isGameFinished:
-        isPushed = True
-        clickScreen(mouseY, mouseX, turn_id)
-    elif not mousePressed and isPushed:
-        isPushed = False
-        
-def print_text(s):
+    global isGameEnabled
+    board = [[2 for i in range(board_width)] for j in range(board_width)]
+    print_text("Black's turn")
+    stroke(0)
+    line(0, 902, 800, 902)
+    isGameEnabled = True
+    
+def print_text(s1):
     fill(255)
     stroke(255)
     rect(0, 801, 800, 100)
 
-    if s == "FirstHand won" or s == "SecondHand won" or s == "Draw":
+    if s1 == "Black won" or s1 == "White won" or s1 == "Draw":
         fill(255, 0, 0)
     else:
         fill(0)
     textSize(40)
-    text(s, 50, 825, 99999, 99999)
+    text(s1, 50, 825, 99999, 99999)
+    
+def print_text2(s1):
+    fill(0, 0, 255)
+    textSize(20)
+    text(s1, 10, 970, 99999, 99999)
+
+def setup():
+    size(800, 1000)
+    background(255)
+    startGame()
+
+def draw():
+    if isGameEnabled:
+        global isPushed
+        global turn_id
+        if mousePressed and not isPushed:
+            isPushed = True
+            clickScreen(mouseY, mouseX, turn_id)
+        elif not mousePressed and isPushed:
+            isPushed = False
