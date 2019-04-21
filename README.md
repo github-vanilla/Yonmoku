@@ -1,5 +1,7 @@
 # 制限付き四目並べ ( Restricted Yonmoku Game )
 
+![image](https://user-images.githubusercontent.com/7500984/56457013-72535000-63af-11e9-81a1-fa87c84b4cd8.PNG)
+
 ## ルール
 ### 勝利条件
 自分の駒を縦・横・斜めのいづれかのパターンで４つ連続で並べたとき
